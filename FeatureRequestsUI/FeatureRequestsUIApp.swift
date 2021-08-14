@@ -11,7 +11,7 @@ import SwiftUI
 struct FeatureRequestsUIApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            FeatureRequests()
         }
     }
 }

@@ -20,8 +20,10 @@ struct RequestRow: View {
                 HStack {
                     StatusText(status: request.status)
                     Spacer()
-                    Image(systemName: "text.bubble").imageScale(.small).foregroundColor(.secondary)
-                    Text("\(request.commentCount)").font(.subheadline).foregroundColor(.secondary)
+                    if request.commentCount > 0 {
+                        Image(systemName: "text.bubble").imageScale(.small).foregroundColor(.secondary)
+                        Text("\(request.commentCount)").font(.subheadline).foregroundColor(.secondary)
+                    }
                 }
             }
         }

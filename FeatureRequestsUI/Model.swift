@@ -8,6 +8,7 @@
 import Foundation
 
 struct ExampleComment: Hashable {
+    var uniqueId: Int = Int.random(in: 1...Int.max)
     var description: String
     var userDisplayName: String
     var date: Date

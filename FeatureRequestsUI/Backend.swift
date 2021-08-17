@@ -26,10 +26,26 @@ class ExampleBackendService: ObservableObject {
     
     @Published var signedInUser = ExampleUser(displayName: "GithubUser", votedList: [])
     
+    var isAdmin: Bool {
+        let adminList: Set<String> = ["GithubUser"]
+        return adminList.contains(signedInUser.displayName)
+    }
+    
     func submitRequest(_ title: String, _ description: String) {
         let newRequest = ExampleRequest(commentCount: 0, status: "Posted", title: title, description: description, votesCount: 0, postedUserDisplayName: signedInUser.displayName)
         requestsFeed.append(newRequest)
         toggleVote(for: newRequest)
+    }
+    
+    func update(_ request: ExampleRequest, _ status: String) {
+        guard let i = feedIndex(for: request) else {return}
+        requestsFeed[i].status = status
+    }
+    
+    
+    func getStatus(for request: ExampleRequest) -> String {
+        guard let i = feedIndex(for: request) else {return "Status Unavailable"}
+        return requestsFeed[i].status
     }
     
     func submitComment(_ comment: String) {
@@ -58,6 +74,15 @@ class ExampleBackendService: ObservableObject {
     func delete(_ request: ExampleRequest) {
         guard let i = feedIndex(for: request) else {return}
         requestsFeed.remove(at: i)
+    }
+    
+    func delete(_ comment: ExampleComment) {
+        for i in 0..<commentsFeed.count {
+            if comment.uniqueId == commentsFeed[i].uniqueId {
+                commentsFeed.remove(at: i)
+                return
+            }
+        }
     }
     
     private func feedIndex(for request: ExampleRequest) -> Int? {

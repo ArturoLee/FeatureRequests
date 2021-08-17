@@ -14,6 +14,21 @@ struct RequestDetails: View {
     var request: ExampleRequest
     @State var newCommentText: String = ""
     
+    var canDelete: Bool {
+        if request.postedUserDisplayName == backendService.signedInUser.displayName && request.votesCount < 2 {
+            return true
+        } else if backendService.isAdmin {
+            return true
+        }
+        return false
+    }
+    
+    var statusOptions = ["Planned", "In Progress","Completed","Maybe Later","Considering","Posted"]
+    
+    var currentStatus: String {
+        backendService.getStatus(for: request)
+    }
+    
     var body: some View {
         List {
             Section(footer:
@@ -29,7 +44,17 @@ struct RequestDetails: View {
                             if request.description != "" {
                                 Text(request.description).font(.subheadline)
                             }
-                            StatusText(status: request.status)
+                            Menu {
+                                ForEach(statusOptions, id: \.self) { status in
+                                    Button(action: {
+                                        backendService.update(request, status)
+                                    }, label: {
+                                        Text(status)
+                                    })
+                                }
+                            } label: {
+                                StatusText(status: currentStatus)
+                            }.disabled(!backendService.isAdmin)
                         }
                         Spacer()
                         VStack{
@@ -40,7 +65,7 @@ struct RequestDetails: View {
                     }
                 }.padding(.vertical, 8)
             }
-            Section(header: Label("\(backendService.commentsFeed.count) Comments", systemImage: "bubble.right")) {
+            Section(header: Label("Comments", systemImage: "bubble.right")) {
                 ForEach(backendService.commentsFeed, id: \.self) {comment in
                     RequestCommentRow(comment: comment)
                 }
@@ -67,7 +92,9 @@ struct RequestDetails: View {
                 presentation.wrappedValue.dismiss()
             }, label: {
                 Image(systemName: "trash")
-            }).foregroundColor(.red))
+            }).foregroundColor(.red)
+            .disabled(!canDelete)
+        )
     }
 }
 

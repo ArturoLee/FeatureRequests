@@ -14,6 +14,7 @@ struct FeatureRequests: View {
     
     var body: some View {
         NavigationView {
+            //Use Element Binding Syntax (Xcode 13)
             List(backendService.requestsFeed, id: \.self) { (request) in
                 NavigationLink(
                     destination: RequestDetails(request: request),

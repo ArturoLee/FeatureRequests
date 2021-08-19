@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F1E5B6B26CD7CEF00FC82AE /* EditFeatureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F1E5B6A26CD7CEF00FC82AE /* EditFeatureRequest.swift */; };
 		8F9B244726C59D5000E1B440 /* FeatureRequestsUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9B244626C59D5000E1B440 /* FeatureRequestsUIApp.swift */; };
 		8F9B244926C59D5000E1B440 /* FeatureRequests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9B244826C59D5000E1B440 /* FeatureRequests.swift */; };
 		8F9B244B26C59D5400E1B440 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F9B244A26C59D5400E1B440 /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8F1E5B6A26CD7CEF00FC82AE /* EditFeatureRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFeatureRequest.swift; sourceTree = "<group>"; };
 		8F9B244326C59D5000E1B440 /* FeatureRequestsUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FeatureRequestsUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F9B244626C59D5000E1B440 /* FeatureRequestsUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRequestsUIApp.swift; sourceTree = "<group>"; };
 		8F9B244826C59D5000E1B440 /* FeatureRequests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRequests.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				8F9B244826C59D5000E1B440 /* FeatureRequests.swift */,
 				8F9B245B26C6185500E1B440 /* RequestDetails.swift */,
 				8F9B245F26C6EAED00E1B440 /* NewFeatureRequest.swift */,
+				8F1E5B6A26CD7CEF00FC82AE /* EditFeatureRequest.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -178,6 +181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F1E5B6B26CD7CEF00FC82AE /* EditFeatureRequest.swift in Sources */,
 				8F9B246826C84A1500E1B440 /* Model.swift in Sources */,
 				8F9B246026C6EAED00E1B440 /* NewFeatureRequest.swift in Sources */,
 				8F9B246A26C84AD900E1B440 /* StatusText.swift in Sources */,

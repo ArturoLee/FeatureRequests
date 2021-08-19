@@ -11,13 +11,10 @@ struct VoteButton: View {
     
     @EnvironmentObject var backendService: ExampleBackendService
     var request: ExampleRequest
+    var voteCompletion: ((ExampleRequest)->())?
     
     var voted: Bool {
         return backendService.signedInUser.votedList.contains(request.uniqueId)
-    }
-    
-    var votes: Int {
-        return backendService.voteCount(for: request)
     }
     
     var body: some View {
@@ -26,7 +23,7 @@ struct VoteButton: View {
         }, label: {
             VStack {
                 Image(systemName: "arrow.up").font(Font.system(size: 17, weight: .black, design: .rounded))
-                Text("\(votes)").font(Font.system(size: 17, weight: .semibold, design: .rounded))
+                Text("\(request.votesCount)").font(Font.system(size: 17, weight: .semibold, design: .rounded))
                 Text("Votes").font(Font.system(size: 15, weight: .regular, design: .rounded))
             }.frame(width: 70, height: 70, alignment: .center)
             .background(voted ? Color.blue : Color.clear).cornerRadius(10)
@@ -36,7 +33,9 @@ struct VoteButton: View {
     }
     
     func toggleVote() {
-        backendService.toggleVote(for: request)
+        if let updatedRequest = backendService.toggleVote(for: request) {
+            voteCompletion?(updatedRequest)
+        }
     }
     
 }

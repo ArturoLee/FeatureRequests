@@ -11,8 +11,10 @@ struct RequestDetails: View {
     
     @Environment(\.presentationMode) var presentation
     @EnvironmentObject var backendService: ExampleBackendService
-    var request: ExampleRequest
+    @State var request: ExampleRequest
     @State var newCommentText: String = ""
+    
+    @State private var showingEditRequest = false
     
     var canDelete: Bool {
         if request.postedUserDisplayName == backendService.signedInUser.displayName && request.votesCount < 2 {
@@ -25,8 +27,13 @@ struct RequestDetails: View {
     
     var statusOptions = ["Planned", "In Progress","Completed","Maybe Later","Considering","Posted"]
     
-    var currentStatus: String {
-        backendService.getStatus(for: request)
+    func update(_ status: String) {
+        request.status = status
+        backendService.update(request)
+    }
+    
+    func refreshRequest(_ updatedRequest: ExampleRequest) {
+        request = updatedRequest
     }
     
     var body: some View {
@@ -47,23 +54,28 @@ struct RequestDetails: View {
                             Menu {
                                 ForEach(statusOptions, id: \.self) { status in
                                     Button(action: {
-                                        backendService.update(request, status)
+                                        update(status)
                                     }, label: {
                                         Text(status)
                                     })
                                 }
                             } label: {
-                                StatusText(status: currentStatus)
+                                StatusText(status: request.status)
                             }.disabled(!backendService.isAdmin)
                         }
                         Spacer()
                         VStack{
                             Spacer()
-                            VoteButton(request: request)
+                            VoteButton(request: request, voteCompletion: refreshRequest(_:))
                             Spacer()
                         }
                     }
                 }.padding(.vertical, 8)
+                if backendService.isAdmin {
+                    Button("Edit") {
+                        showingEditRequest = true
+                    }
+                }
             }
             Section(header: Label("Comments", systemImage: "bubble.right")) {
                 ForEach(backendService.commentsFeed, id: \.self) {comment in
@@ -95,6 +107,9 @@ struct RequestDetails: View {
             }).foregroundColor(.red)
             .disabled(!canDelete)
         )
+        .sheet(isPresented: $showingEditRequest, content: {
+            EditFeatureRequest(isPresented: $showingEditRequest, request: $request)
+        })
     }
 }
 

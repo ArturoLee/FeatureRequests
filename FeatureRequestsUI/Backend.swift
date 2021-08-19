@@ -26,26 +26,10 @@ class ExampleBackendService: ObservableObject {
     
     @Published var signedInUser = ExampleUser(displayName: "GithubUser", votedList: [])
     
-    var isAdmin: Bool {
-        let adminList: Set<String> = ["GithubUser"]
-        return adminList.contains(signedInUser.displayName)
-    }
-    
     func submitRequest(_ title: String, _ description: String) {
         let newRequest = ExampleRequest(commentCount: 0, status: "Posted", title: title, description: description, votesCount: 0, postedUserDisplayName: signedInUser.displayName)
         requestsFeed.append(newRequest)
-        toggleVote(for: newRequest)
-    }
-    
-    func update(_ request: ExampleRequest, _ status: String) {
-        guard let i = feedIndex(for: request) else {return}
-        requestsFeed[i].status = status
-    }
-    
-    
-    func getStatus(for request: ExampleRequest) -> String {
-        guard let i = feedIndex(for: request) else {return "Status Unavailable"}
-        return requestsFeed[i].status
+        _ = toggleVote(for: newRequest)
     }
     
     func submitComment(_ comment: String) {
@@ -53,8 +37,8 @@ class ExampleBackendService: ObservableObject {
         commentsFeed.append(newComment)
     }
     
-    func toggleVote(for request: ExampleRequest) {
-        guard let i = feedIndex(for: request) else {return}
+    func toggleVote(for request: ExampleRequest) -> ExampleRequest? {
+        guard let i = feedIndex(for: request) else {return nil}
         if signedInUser.votedList.contains(request.uniqueId) {
             //Unvote
             requestsFeed[i].votesCount -= 1
@@ -64,11 +48,7 @@ class ExampleBackendService: ObservableObject {
             requestsFeed[i].votesCount += 1
             signedInUser.votedList.insert(request.uniqueId)
         }
-    }
-    
-    func voteCount(for request: ExampleRequest) -> Int {
-        guard let i = feedIndex(for: request) else {return 0}
-        return requestsFeed[i].votesCount
+        return requestsFeed[i]
     }
     
     func delete(_ request: ExampleRequest) {
@@ -92,6 +72,18 @@ class ExampleBackendService: ObservableObject {
             }
         }
         return nil
+    }
+    
+    //MARK: - Admin Exclusive Access
+    
+    var isAdmin: Bool {
+        let adminList: Set<String> = ["GithubUser"]
+        return adminList.contains(signedInUser.displayName)
+    }
+    
+    func update(_ request: ExampleRequest) {
+        guard let i = feedIndex(for: request) else {return}
+        requestsFeed[i] = request
     }
 
 }
